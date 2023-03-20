@@ -1,11 +1,11 @@
 import math
-import torch
-from torch import nn
-import torch.nn.functional as F
+import oneflow as flow
+from oneflow import nn
+import oneflow.nn.functional as F
 import numpy as np
 
 def nonlinearity(x):
-    return x * torch.sigmoid(x)
+    return x * flow.sigmoid(x)
 
 def Normalize(in_channels):
     return nn.GroupNorm(num_groups=32, num_channels=in_channels, eps=1e-6, affine=True)
@@ -158,13 +158,13 @@ class AttnBlock(nn.Module):
         q = q.reshape(B, C, -1)
         q = q.permute(0, 2, 1) # (B, H*W, C)
         k = k.reshape(B, C, -1) # (B, C, H*W)
-        w_ = torch.bmm(q, k) # (B, H*W, H*W)
+        w_ = flow.bmm(q, k) # (B, H*W, H*W)
         w_ = w_ * C**(-0.5)
         w_ = F.softmax(w_, dim=2)
 
         v = v.reshape(B, C, -1) # (B, C, H*W)
         w_ = w_.permute(0, 2, 1)
-        h_ = torch.bmm(v, w_)
+        h_ = flow.bmm(v, w_)
         h_ = h_.reshape(B, C, H, W)
 
         h_ = self.proj_out(h_)

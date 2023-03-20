@@ -27,10 +27,10 @@ ids = icetk.encode('你好世界！这里是 icetk。')
 
 ids = icetk.encode(image_path='test.jpeg', image_size=256, compress_rate=8)
 # ids == tensor([[12738, 12430, 10398,  ...,  7236, 12844, 12386]], device='cuda:0')
-# ids.shape == torch.Size([1, 1024])
+# ids.shape == flow.Size([1, 1024])
 img = icetk.decode(image_ids=ids, compress_rate=8)
-# img.shape == torch.Size([1, 3, 256, 256])
-from torchvision.utils import save_image
+# img.shape == flow.Size([1, 3, 256, 256])
+from flowvision.utils import save_image
 save_image(img, 'recover.jpg')
 
 # add special tokens
