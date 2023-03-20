@@ -1,5 +1,5 @@
-import torch
-from torch import nn
+import oneflow as flow
+from oneflow import nn
 import json
 import os
 

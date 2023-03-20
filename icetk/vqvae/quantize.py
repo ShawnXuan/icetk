@@ -1,7 +1,7 @@
-import torch
-from torch import nn
-from torch import einsum
-from torch.nn import functional as F
+import oneflow as flow
+from oneflow import nn
+from oneflow import einsum
+from oneflow.nn import functional as F
 
 class VectorQuantize(nn.Module):
     def __init__(self, 
@@ -70,7 +70,7 @@ class VectorQuantizeEMA(nn.Module):
         self.embed = nn.Embedding(n_embed, embedding_dim)
         self.embed.weight.data.uniform_(-1. / n_embed, 1. / n_embed)
         
-        self.register_buffer("cluster_size", torch.zeros(n_embed))
+        self.register_buffer("cluster_size", flow.zeros(n_embed))
         self.register_buffer("embed_avg", self.embed.weight.data.clone())
         
         self.decay = decay
@@ -145,7 +145,7 @@ class GumbelQuantize(nn.Module):
         z_q = einsum('b n h w, n d -> b d h w', soft_one_hot, self.embed.weight)
         
         qy = F.softmax(z_e, dim=1)
-        diff = self.kl_weight * torch.sum(qy * torch.log(qy * self.n_embed + self.eps), dim=1).mean()
+        diff = self.kl_weight * flow.sum(qy * flow.log(qy * self.n_embed + self.eps), dim=1).mean()
         
         embed_ind = soft_one_hot.argmax(dim=1)
         z_q = z_q.permute(0, 2, 3, 1)

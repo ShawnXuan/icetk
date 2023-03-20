@@ -1,11 +1,11 @@
 import importlib
-import torch
+import oneflow as flow
 import json
 import math
 import os
 import numpy as np
 
-import torch.nn.functional as F
+import oneflow.nn.functional as F
 
 def new_module(config):
     '''in config:
@@ -23,7 +23,7 @@ def new_module(config):
     return model
 
 def load_ckpt(model, path):
-    sd = torch.load(path, map_location="cpu")['module']
+    sd = flow.load(path, map_location="cpu")['module']
     model.load_state_dict(sd, strict=False)
     return model
 
